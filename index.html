@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1º Aninho da Ayanna - Jardim Encantado</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-top: #fdf6f8;
+      --bg-bottom: #eef6f0;
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --sage: #5c7c66;
+      --sage-dark: #435e4c;
+      --rose: #d97a96;
+      --rose-light: #fbe8ee;
+      --gold: #c59b45;
+      --text: #3e4740;
+      --muted: #6e7a71;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      color: var(--text);
+      background: linear-gradient(160deg, var(--bg-top) 0%, #fffaf2 50%, var(--bg-bottom) 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 14px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Elementos flutuantes decorativos */
+    .floating-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .floater {
+      position: absolute;
+      font-size: 1.35rem;
+      opacity: 0.45;
+      animation: floatUp 14s linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(105vh) rotate(0deg);
+        opacity: 0;
+      }
+      15% { opacity: 0.5; }
+      85% { opacity: 0.5; }
+      100% {
+        transform: translateY(-10vh) rotate(25deg);
+        opacity: 0;
+      }
+    }
+
+    /* Cartão principal */
+    .invite-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 460px;
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border-radius: 28px;
+      border: 2px solid #f2dce3;
+      box-shadow: 0 20px 45px rgba(92, 124, 102, 0.14);
+      padding: 28px 20px 30px;
+      text-align: center;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .top-badge {
+      display: inline-block;
+      background: var(--rose-light);
+      color: var(--rose);
+      font-weight: 800;
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    /* Carrossel dos 11 primeiros meses */
+    .carousel-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto 14px;
+    }
+
+    .carousel-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 4.3;
+      border-radius: 24px;
+      padding: 5px;
+      background: linear-gradient(135deg, var(--rose), var(--gold), var(--sage));
+      box-shadow: 0 10px 24px rgba(217, 122, 150, 0.22);
+      overflow: hidden;
+    }
+
+    .carousel-viewport {
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #fff8fa;
+      position: relative;
+    }
+
+    .carousel-track {
+      display: flex;
+      height: 100%;
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .carousel-slide {
+      min-width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .slide-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(155deg, #fff5f8 0%, #f1f9f3 100%);
+      padding: 16px;
+      gap: 6px;
+    }
+
+    .slide-fallback .emoji {
+      font-size: 2.6rem;
+    }
+
+    .slide-fallback .fallback-label {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--sage-dark);
+    }
+
+    .slide-fallback .fallback-hint {
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .month-tag {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(62, 71, 64, 0.82);
+      color: #ffffff;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
+      white-space: nowrap;
+      z-index: 2;
+    }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--sage-dark);
+      font-size: 1.15rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+      z-index: 3;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .carousel-btn:hover {
+      background: #ffffff;
+      transform: translateY(-50%) scale(1.06);
+    }
+
+    .carousel-btn.prev { left: 10px; }
+    .carousel-btn.next { right: 10px; }
+
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      border: none;
+      background: #dcc8cf;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      padding: 0;
+    }
+
+    .dot.active {
+      width: 20px;
+      background: var(--rose);
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--sage);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-top: 6px;
+    }
+
+    .name-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: 3.6rem;
+      color: var(--rose);
+      line-height: 1.05;
+      margin: 4px 0 6px;
+      text-shadow: 0 2px 10px rgba(217, 122, 150, 0.15);
+    }
+
+    .age-pill {
+      display: inline-block;
+      color: var(--gold);
+      font-weight: 800;
+      font-size: 1.05rem;
+      margin-bottom: 14px;
+    }
+
+    .intro-text {
+      font-size: 0.96rem;
+      line-height: 1.55;
+      color: var(--muted);
+      margin-bottom: 22px;
+      padding: 0 6px;
+    }
+
+    /* Bloco Data e Hora */
+    .event-box {
+      background: linear-gradient(135deg, #f6fbf7 0%, #fdf5f8 100%);
+      border: 1.5px solid #e3ede6;
+      border-radius: 20px;
+      padding: 18px 14px;
+      margin-bottom: 20px;
+    }
+
+    .event-date {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--sage-dark);
+      margin-bottom: 4px;
+    }
+
+    .event-time {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--rose);
+      margin-bottom: 10px;
+    }
+
+    .event-address {
+      font-size: 0.88rem;
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    /* Contagem regressiva */
+    .countdown-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .time-unit {
+      background: #ffffff;
+      border: 1px solid #eedbe1;
+      border-radius: 14px;
+      padding: 10px 4px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    }
+
+    .time-unit span {
+      display: block;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--sage-dark);
+    }
+
+    .time-unit small {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* Botões de Ação */
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 800;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--rose) 0%, #c96281 100%);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(217, 122, 150, 0.32);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--sage);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(92, 124, 102, 0.25);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: var(--sage-dark);
+      border: 1.5px solid #cfe0d4;
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    /* Modal de Confirmação */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(35, 45, 38, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 20;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: #fff;
+      width: 100%;
+      max-width: 390px;
+      border-radius: 24px;
+      padding: 24px 20px;
+      text-align: left;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      animation: fadeIn 0.25s ease;
+    }
+
+    .modal h3 {
+      color: var(--sage-dark);
+      font-size: 1.2rem;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .modal p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1.5px solid #dce6df;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--rose);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Borboletas e flores animadas -->
+  <div class="floating-layer" id="floatingLayer"></div>
+
+  <main class="invite-card">
+    <span class="top-badge">✨ Jardim Encantado ✨</span>
+
+    <!-- Carrossel dos 11 primeiros meses -->
+    <div class="carousel-wrapper">
+      <div class="carousel-frame">
+        <div class="carousel-viewport" id="carouselViewport">
+          <div class="carousel-track" id="carouselTrack"></div>
+          <button type="button" class="carousel-btn prev" id="prevBtn" aria-label="Mês anterior">‹</button>
+          <button type="button" class="carousel-btn next" id="nextBtn" aria-label="Próximo mês">›</button>
+          <div class="month-tag" id="monthTag">1º Mês</div>
+        </div>
+      </div>
+      <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+
+    <p class="subtitle">Venha celebrar o</p>
+    <h1 class="name-title">Ayanna</h1>
+    <div class="age-pill">• 1º Aninho •</div>
+
+    <p class="intro-text">
+      Um jardim cheio de flores, borboletas e alegria está sendo preparado com muito carinho para comemorar o meu primeiro aninho!
+    </p>
+
+    <section class="event-box">
+      <div class="event-date">📅 Domingo, 13 de Dezembro de 2026</div>
+      <div class="event-time">🕒 Às 15h00</div>
+      <div class="event-address">
+        📍 <strong>Rua Taubaté, 256 — Casa 2</strong><br>
+        Vila Maria Luiza • Francisco Morato - SP<br>
+        CEP: 07903-020
+      </div>
+    </section>
+
+    <div class="countdown-title">Faltam para a festa</div>
+    <div class="countdown" id="countdown">
+      <div class="time-unit"><span id="days">00</span><small>Dias</small></div>
+      <div class="time-unit"><span id="hours">00</span><small>Horas</small></div>
+      <div class="time-unit"><span id="minutes">00</span><small>Min</small></div>
+      <div class="time-unit"><span id="seconds">00</span><small>Seg</small></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" onclick="abrirModal()">
+        💌 Confirmar Presença
+      </button>
+
+      <a class="btn btn-secondary"
+         href="https://www.google.com/maps/search/?api=1&query=Rua+Taubat%C3%A9,+256+-+Vila+Maria+Luiza,+Francisco+Morato+-+SP,+07903-020"
+         target="_blank"
+         rel="noopener noreferrer">
+        🗺️ Como Chegar (Google Maps)
+      </a>
+
+      <button class="btn btn-outline" onclick="salvarNaAgenda()">
+        🗓️ Salvar Lembrete na Agenda
+      </button>
+    </div>
+
+    <p class="footer-note">Sua presença tornará nosso jardim ainda mais especial! 🌷</p>
+  </main>
+
+  <!-- Modal de Confirmação de Presença -->
+  <div class="modal-backdrop" id="rsvpModal">
+    <div class="modal">
+      <h3>Confirmar Presença 🦋</h3>
+      <p>Preencha abaixo para enviar sua confirmação pelo WhatsApp:</p>
+
+      <div class="form-group">
+        <label for="guestName">Seu nome (ou família):</label>
+        <input type="text" id="guestName" placeholder="Ex: Tia Maria e João" />
+      </div>
+
+      <div class="form-group">
+        <label for="guestCount">Quantas pessoas vão?</label>
+        <select id="guestCount">
+          <option value="1 pessoa">1 pessoa</option>
+          <option value="2 pessoas" selected>2 pessoas</option>
+          <option value="3 pessoas">3 pessoas</option>
+          <option value="4 pessoas">4 pessoas</option>
+          <option value="5 ou mais pessoas">5 ou mais pessoas</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="fecharModal()" style="padding: 11px;">Cancelar</button>
+        <button class="btn btn-primary" onclick="enviarWhatsApp()" style="padding: 11px;">Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // CONFIGURAÇÃO: COLOQUE AQUI O SEU NÚMERO DE WHATSAPP (55 + DDD + NÚMERO)
+    // ============================================================
+    const SEU_WHATSAPP = "5511917787887";
+
+    // ============================================================
+    // FOTOS DOS 11 PRIMEIROS MESES (salve como mes1.jpg até mes11.jpg)
+    // ============================================================
+    const FOTOS_MESES = [
+      { mes: "1º Mês", src: "mes1.jpg", emoji: "🌱" },
+      { mes: "2º Mês", src: "mes2.jpg", emoji: "🌼" },
+      { mes: "3º Mês", src: "mes3.jpg", emoji: "🦋" },
+      { mes: "4º Mês", src: "mes4.jpg", emoji: "🌷" },
+      { mes: "5º Mês", src: "mes5.jpg", emoji: "🌸" },
+      { mes: "6º Mês", src: "mes6.jpg", emoji: "🌻" },
+      { mes: "7º Mês", src: "mes7.jpg", emoji: "🐝" },
+      { mes: "8º Mês", src: "mes8.jpg", emoji: "🌿" },
+      { mes: "9º Mês", src: "mes9.jpg", emoji: "🌺" },
+      { mes: "10º Mês", src: "mes10.jpg", emoji: "✨" },
+      { mes: "11º Mês", src: "mes11.jpg", emoji: "👑" }
+    ];
+
+    const track = document.getElementById("carouselTrack");
+    const dotsContainer = document.getElementById("carouselDots");
+    const monthTag = document.getElementById("monthTag");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    let currentSlide = 0;
+    let autoSlideTimer;
+
+    function renderCarousel() {
+      track.innerHTML = "";
+      dotsContainer.innerHTML = "";
+
+      FOTOS_MESES.forEach((item, index) => {
+        const slide = document.createElement("div");
+        slide.className = "carousel-slide";
+
+        const img = document.createElement("img");
+        img.src = item.src;
+        img.alt = `Ayanna - ${item.mes}`;
+
+        const fallback = document.createElement("div");
+        fallback.className = "slide-fallback";
+        fallback.style.display = "none";
+        fallback.innerHTML = `
+          <span class="emoji">${item.emoji}</span>
+          <span class="fallback-label">Ayanna • ${item.mes}</span>
+          <span class="fallback-hint">Adicione ${item.src}</span>
+        `;
+
+        img.addEventListener("error", () => {
+          img.style.display = "none";
+          fallback.style.display = "flex";
+        });
+
+        slide.appendChild(img);
+        slide.appendChild(fallback);
+        track.appendChild(slide);
+
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "dot" + (index === 0 ? " active" : "");
+        dot.setAttribute("aria-label", `Ver ${item.mes}`);
+        dot.addEventListener("click", () => {
+          goToSlide(index);
+          restartAutoSlide();
+        });
+        dotsContainer.appendChild(dot);
+      });
+
+      updateSlidePosition();
+    }
+
+    function updateSlidePosition() {
+      track.style.transform = `translateX(-${currentSlide * 100}%)`;
+      monthTag.textContent = FOTOS_MESES[currentSlide].mes;
+
+      const allDots = dotsContainer.querySelectorAll(".dot");
+      allDots.forEach((d, idx) => {
+        d.classList.toggle("active", idx === currentSlide);
+      });
+    }
+
+    function goToSlide(index) {
+      const total = FOTOS_MESES.length;
+      currentSlide = (index + total) % total;
+      updateSlidePosition();
+    }
+
+    prevBtn.addEventListener("click", () => {
+      goToSlide(currentSlide - 1);
+      restartAutoSlide();
+    });
+
+    nextBtn.addEventListener("click", () => {
+      goToSlide(currentSlide + 1);
+      restartAutoSlide();
+    });
+
+    // Suporte a deslizar com o dedo no celular
+    let touchStartX = 0;
+    const viewport = document.getElementById("carouselViewport");
+
+    viewport.addEventListener("touchstart", (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    viewport.addEventListener("touchend", (e) => {
+      const touchEndX = e.changedTouches[0].screenX;
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 35) {
+        if (diff > 0) {
+          goToSlide(currentSlide + 1);
+        } else {
+          goToSlide(currentSlide - 1);
+        }
+        restartAutoSlide();
+      }
+    }, { passive: true });
+
+    function startAutoSlide() {
+      autoSlideTimer = setInterval(() => {
+        goToSlide(currentSlide + 1);
+      }, 3500);
+    }
+
+    function restartAutoSlide() {
+      clearInterval(autoSlideTimer);
+      startAutoSlide();
+    }
+
+    renderCarousel();
+    startAutoSlide();
+
+    // ============================================================
+    // CONTAGEM REGRESSIVA: 13/12/2026 às 15:00
+    // ============================================================
+    const eventDate = new Date("2026-12-13T15:00:00-03:00").getTime();
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const diff = eventDate - now;
+
+      if (diff <= 0) {
+        document.getElementById("countdown").innerHTML =
+          '<div style="grid-column: 1 / -1; font-weight: 800; color: #d97a96; padding: 10px;">🎉 É hoje! Te esperamos na festa da Ayanna! 🎉</div>';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / 1000 / 60) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("days").textContent = String(days).padStart(2, "0");
+      document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+      document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+      document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // ============================================================
+    // ELEMENTOS FLUTUANTES
+    // ============================================================
+    const icons = ["🦋", "🌸", "🌷", "✨", "🌿"];
+    const layer = document.getElementById("floatingLayer");
+    for (let i = 0; i < 14; i++) {
+      const span = document.createElement("span");
+      span.className = "floater";
+      span.textContent = icons[i % icons.length];
+      span.style.left = Math.random() * 95 + "%";
+      span.style.animationDuration = (11 + Math.random() * 10) + "s";
+      span.style.animationDelay = (Math.random() * 10) + "s";
+      layer.appendChild(span);
+    }
+
+    // ============================================================
+    // MODAL RSVP & AGENDA
+    // ============================================================
+    function abrirModal() {
+      document.getElementById("rsvpModal").classList.add("open");
+    }
+
+    function fecharModal() {
+      document.getElementById("rsvpModal").classList.remove("open");
+    }
+
+    function enviarWhatsApp() {
+      const nome = document.getElementById("guestName").value.trim();
+      const qtd = document.getElementById("guestCount").value;
+
+      if (!nome) {
+        alert("Por favor, digite seu nome antes de enviar.");
+        return;
+      }
+
+      const mensagem = `Oi! Confirmo presença no 1º aninho da Ayanna (Jardim Encantado) no dia 13/12!\n\n👤 *Nome:* ${nome}\n👨‍👩‍👧 *Quantidade:* ${qtd}`;
+      const url = `https://wa.me/${SEU_WHATSAPP}?text=${encodeURIComponent(mensagem)}`;
+      window.open(url, "_blank");
+      fecharModal();
+    }
+
+    function salvarNaAgenda() {
+      const icsContent = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "BEGIN:VEVENT",
+        "DTSTART:20261213T180000Z",
+        "DTEND:20261213T220000Z",
+        "SUMMARY:1º Aninho da Ayanna - Jardim Encantado",
+        "DESCRIPTION:Festa de 1 ano da Ayanna! Tema Jardim Encantado.",
+        "LOCATION:Rua Taubaté, 256 casa 2 - Vila Maria Luiza, Francisco Morato - SP, 07903-020",
+        "END:VEVENT",
+        "END:VCALENDAR"
+      ].join("\r\n");
+
+      const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "aniversario-ayanna-1-ano.ics";
+      link.click();
+    }
+  </script>
+</body>
+</html>
